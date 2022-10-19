@@ -153,7 +153,6 @@ class Gui():
     
     def salir(self):
         self.repositorio.guardar_todo(self.anotador.notas)
-        self.ventana_principal.destroy()
 
 if __name__ == "__main__":
     gui = Gui()
