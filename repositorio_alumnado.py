@@ -31,7 +31,7 @@ class RepositorioAlumnado:
     def texto_a_alumno(self, texto):
         texto = texto[:-1] # Sacamos el \n final
         alumno_como_lista = texto.split(',')
-        a = Alumno(alumno_como_lista[0], alumno_como_lista[1], alumno_como_lista[2], alumno_como_lista[3], alumno_como_lista[4])
+        a = Alumno(alumno_como_lista[1], alumno_como_lista[0], alumno_como_lista[2], alumno_como_lista[3], alumno_como_lista[4])
         fecha = alumno_como_lista[2].split('-')
         a.fecha_inscripcion = datetime.date(int(fecha[0]),int(fecha[1]),int(fecha[2])) 
         return a

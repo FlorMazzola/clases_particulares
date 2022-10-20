@@ -8,15 +8,15 @@ class Alumnado:
         '''Inicializa el anotador con una lista vacía de Notas'''
         self.alumnos = lista_de_alumnos
 
-    def nuevo_alumno (self, nombre, dia_dictado):
+    def nuevo_alumno (self, dni, nombre, dia_dictado, horario_dictado, instrumento):
         '''Crea una nueva nota y la agrega a la lista'''
-        alumno = Alumno(nombre, dia_dictado)
+        alumno = Alumno(dni, nombre, dia_dictado, horario_dictado, instrumento)
         self.alumnos.append(alumno)
         return alumno
 
-    def _buscar_por_dni(self,dni_alumno):
+    def _buscar_por_dni(self, dni_alumno):
         '''Buscar la nota con el id dado'''
-        for alumno in self.lista_de_alumnos:
+        for alumno in self.alumnos:
             if str(alumno.dni) == str(dni_alumno):
                 return alumno
         return None
@@ -29,7 +29,7 @@ class Alumnado:
                 self.alumnos_por_instrumento.append(alumno)
         return self.alumnos_por_instrumento
 
-    def eliminar_alumno(self,dni_alumno):
+    def eliminar_alumno(self, dni_alumno):
         '''Busca la nota con el id dado y la elimina'''
         alumno = self._buscar_por_dni(dni_alumno)
         if alumno:
@@ -37,13 +37,12 @@ class Alumnado:
             return True
         return False
 
-    def modificar(self, dni_alumno, nombre, dia_dictado, horario, instrumento):
+    def modificar_alumno(self, dni_alumno, nombre, dia_dictado, horario_dictado, instrumento):
         alumno = self._buscar_por_dni(dni_alumno)
         if alumno:
-            alumno.dni_alumno = dni_alumno
             alumno.nombre = nombre
             alumno.dia_dictado = dia_dictado
-            alumno.horario = horario
+            alumno.horario_dictado = horario_dictado
             alumno.instrumento = instrumento
             return True
         return False
