@@ -30,6 +30,12 @@ class Gui():
         botonBuscar = tkinter.Button(self.ventana_principal, text = "Buscar alumno",
                            command = self.buscar_alumnos).grid(row=1, column=2, sticky="w")
 
+        instrumentos = ['Guitarra', 'Bajo', 'Flauta']
+        filtro_elegido = tkinter.StringVar(self.ventana_principal)
+        filtro_elegido.set(instrumentos[0]) # default value
+        self.buscar_filtro = ttk.OptionMenu(self.ventana_principal, filtro_elegido, '', *instrumentos, command=self.buscar_instrumento)
+        self.buscar_filtro.grid(row=2, column=3)
+
         self.treeview = ttk.Treeview(self.ventana_principal)
         self.treeview = ttk.Treeview(self.ventana_principal,
         columns=("nombre", "dia_dictado", "horario", "instrumento"))
@@ -63,19 +69,18 @@ class Gui():
         
     def agregar_alumno(self):
         self.modalAgregar = tkinter.Toplevel(self.ventana_principal)
-        #top.transient(parent)
         self.modalAgregar.grab_set()
         tkinter.Label(self.modalAgregar, text = "Dni: ").grid(row=0)
         self.dni = tkinter.Entry(self.modalAgregar)
         self.dni.grid(row=0, column=1, columnspan=2)
+        self.dni.focus()
         tkinter.Label(self.modalAgregar, text = "Alumno: ").grid(row=1)
         self.nombre = tkinter.Entry(self.modalAgregar)
         self.nombre.grid(row=1,column=1,columnspan=2)
-        self.nombre.focus()
-        tkinter.Label(self.modalAgregar, text = "Dia de dictado: ").grid(row=2)
+        tkinter.Label(self.modalAgregar, text = "Dia de dictado (XXXX-MM-DD): ").grid(row=2)
         self.dia_dictado = tkinter.Entry(self.modalAgregar)
         self.dia_dictado.grid(row=2, column=1, columnspan=2)
-        tkinter.Label(self.modalAgregar, text = "Horario dictado: ").grid(row=3)
+        tkinter.Label(self.modalAgregar, text = "Horario dictado (HH-MM): ").grid(row=3)
         self.horario_dictado = tkinter.Entry(self.modalAgregar)
         self.horario_dictado.grid(row=3, column=1, columnspan=2)
         tkinter.Label(self.modalAgregar, text = "Instrumento: ").grid(row=4)
@@ -93,7 +98,7 @@ class Gui():
         alumno = self.alumnado.nuevo_alumno(self.dni.get(), self.nombre.get(), self.dia_dictado.get(), self.horario_dictado.get(), self.instrumento.get())
         self.modalAgregar.destroy()
         item = self.treeview.insert("", tkinter.END, text=alumno.dni,
-        values=(alumno.dni, alumno.nombre, alumno.dia_dictado, alumno.horario_dictado, alumno.instrumento))
+        values=(alumno.nombre, alumno.dia_dictado, alumno.horario_dictado, alumno.instrumento))
 
     def modificar_alumno(self):
         if not self.treeview.selection():
@@ -102,7 +107,6 @@ class Gui():
             return False
         #id = int(self.treeview.selection()[0][1:])
         item = self.treeview.selection()
-        print(item)
         dni = self.treeview.item(item)['text']
         alumno = self.alumnado._buscar_por_dni(dni)
         dni = self.treeview.item(item, option="text")
@@ -145,9 +149,7 @@ class Gui():
         horario_temp = self.horario_dictado.get()
         instrumento_temp = self.instrumento.get()
         
-        print("Modificado el horario de cursado",)#dni_alumno)
-        #id = int(self.treeview.selection()[0][1:])
-        #idtree = self.treeview.selection()[0]
+        print("Modificado el horario de cursado",) #imprime el id modificado
         self.alumnado.modificar_alumno(dni, nombre_temp, dia_temp, horario_temp, instrumento_temp)
         self.treeview.set(self.treeview.selection()[0], column="nombre",
                           value = nombre_temp)
@@ -168,9 +170,16 @@ class Gui():
             resp = messagebox.askokcancel("Confirmar",
                     "¿Está seguro de eliminar el alumno?")
             if resp:
-                dni = int(self.treeview.selection()[0][1:])
-                self.treeview.delete(self.treeview.selection()[0])
-                self.alumnado.eliminar_alumno(dni)
+                item = self.treeview.selection()
+                dni = self.treeview.item(item)['text']
+                alumno = self.alumnado._buscar_por_dni(dni)
+                if alumno:
+                    if self.alumnado.eliminar_alumno(dni):
+                        self.treeview.delete(dni)
+                    else:
+                        messagebox.showwarning(
+                            "Error al eliminar", "Hubo un error vuelva a intentar mas tarde")
+                print(alumno.nombre + 'alumno eliminado')
             else:
                 return False
 
@@ -181,7 +190,16 @@ class Gui():
             self.poblar_tabla(alumnado)
         else:
             messagebox.showwarning("Sin resultados",
-                                "Ninguna alumno coincide con la búsqueda")
+                                "Ningun alumno coincide con la búsqueda")
+
+    def buscar_instrumento(self, filtro):
+        #filtro = self.buscar_filtro.get()
+        alumnado = self.alumnado.filtrar(filtro)
+        if alumnado:
+            self.poblar_tabla(alumnado)
+        else:
+            messagebox.showwarning("Sin resultados",
+                                "Ningun alumno coincide con la búsqueda")
     
     def salir(self):
         self.repositorio_alumnado.guardar_todo(self.alumnado.alumnos)

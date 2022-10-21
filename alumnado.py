@@ -1,4 +1,5 @@
 from alumno import Alumno
+import datetime
 
 class Alumnado:
     '''Representa una colección de Notas que se pueden etiquetar, modificar, y
@@ -10,9 +11,21 @@ class Alumnado:
 
     def nuevo_alumno (self, dni, nombre, dia_dictado, horario_dictado, instrumento):
         '''Crea una nueva nota y la agrega a la lista'''
-        alumno = Alumno(dni, nombre, dia_dictado, horario_dictado, instrumento)
-        self.alumnos.append(alumno)
-        return alumno
+        fecha = dia_dictado.split('/')
+        dia_dictado = datetime.date(int(fecha[0]),int(fecha[1]),int(fecha[2])) 
+        hora = horario_dictado.split(':')
+        horario_dictado = datetime.time(int(hora[0]),int(hora[1])) 
+        nuevo_alumno = Alumno(dni, nombre, dia_dictado, horario_dictado, instrumento)
+        self.alumnos.append(nuevo_alumno)
+        return nuevo_alumno
+
+    def buscar(self, nombre):
+        '''Busca todas las notas que coincidan con el filtro dado'''
+        self.alumnos_por_nombre = []
+        for alumno in self.alumnos:
+            if alumno.coincide(nombre):
+                self.alumnos_por_nombre.append(alumno)
+        return self.alumnos_por_nombre
 
     def _buscar_por_dni(self, dni_alumno):
         '''Buscar la nota con el id dado'''
@@ -21,12 +34,12 @@ class Alumnado:
                 return alumno
         return None
 
-    def buscar(self, instrumento):
+    def filtrar(self, filtro):
         '''Busca todas las notas que coincidan con el filtro dado'''
         self.alumnos_por_instrumento = []
-        for alumno in self.alumnos_por_instrumento:
-            if alumno.coincide(instrumento):
-                self.alumnos_por_instrumento.append(alumno)
+        for instrumento in self.alumnos:
+            if instrumento.coincide(filtro.lower()):
+                self.alumnos_por_instrumento.append(instrumento)
         return self.alumnos_por_instrumento
 
     def eliminar_alumno(self, dni_alumno):

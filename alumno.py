@@ -5,13 +5,13 @@ dni = 0
 
 class Alumno:
     '''Representa una nota en el anotador. Tiene etiquetas y se puede buscar'''
-    def __init__(self, dni, nombre, dia_dictado, horario, instrumento):
+    def __init__(self, dni, nombre, dia_dictado, horario_dictado, instrumento):
         '''Inicializa la nota con un texto, y opcionalmente, con etiquetas 
         separadas por espacios. Automáticamente define fecha de creación e id'''
+        self.dni = dni
         self.nombre = nombre
         self.dia_dictado = dia_dictado
-        self.dni = dni
-        self.horario_dictado = horario
+        self.horario_dictado = horario_dictado
         self.instrumento = instrumento
 
     def coincide(self, instrumento):

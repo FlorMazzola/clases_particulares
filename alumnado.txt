@@ -1,5 +1,3 @@
-Florencia Mazzola,12345678,2022-10-10,19-0,guitarrita
-Florencia Mazzol,12345679,2022-10-10,19-0,guitarrita
-Florencia Mazzo,12345677,2022-10-10,19-0,guitarrita
-Florencia Mazz,12345676,2022-10-10,19-0,guitarrita
-Florencia Maz,12345675,2022-10-10,19-0,guitarrita
+Florencia Mazzola,39505301,2022-12-12,19-0,guitarrita            
+Juan Manuel Bertazzo,12345678,2022-12-12,20-0,flauta                                   
+fede,456,2022-12-12,15-0,fasdfdsfsd          

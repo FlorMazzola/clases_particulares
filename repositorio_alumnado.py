@@ -23,13 +23,6 @@ class RepositorioAlumnado:
                 datos_texto.write(alumno_como_texto)
             print("Guardado en "+ self.archivo)
 
-    def alumno_a_texto(self, alumno):
-        fc = alumno.dia_dictado
-        fecha_en_texto = str(fc.year) + '-' + str(fc.month) + '-' + str(fc.day)
-        fc = alumno.horario_dictado
-        hora_en_texto = str(fc.hour) + '-' + str(fc.minute)
-        return alumno.nombre + ',' + alumno.dni + ',' + fecha_en_texto + ',' + hora_en_texto + ',' + alumno.instrumento + "\n"
-
     def texto_a_alumno(self, texto):
         texto = texto[:-1] # Sacamos el \n final
         alumno_como_lista = texto.split(',')
@@ -39,3 +32,10 @@ class RepositorioAlumnado:
         hora = alumno_como_lista[3].split('-')
         a.horario_dictado = datetime.time(int(hora[0]),int(hora[1])) 
         return a
+
+    def alumno_a_texto(self, alumno):
+        fc = alumno.dia_dictado
+        fecha_en_texto = str(fc.year) + '-' + str(fc.month) + '-' + str(fc.day)
+        fc = alumno.horario_dictado
+        hora_en_texto = str(fc.hour) + '-' + str(fc.minute)
+        return alumno.nombre + ',' + alumno.dni + ',' + fecha_en_texto + ',' + hora_en_texto + ',' + alumno.instrumento + " \n"
