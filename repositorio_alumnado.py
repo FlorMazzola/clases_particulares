@@ -6,9 +6,12 @@ import datetime
 
 class RepositorioAlumnado:
     def __init__(self, archivo = "alumnado.txt"):
+        '''Almacena los datos en un .txt'''
         self.archivo = archivo
 
     def obtener_todo(self):
+        '''Visualiza el .txt y en caso que se encuentren datos, 
+        envia los datos sobre el/los alumno/s'''
         alumnado = []
         with open(self.archivo, 'r') as datos_texto:
             for alumno_como_texto in datos_texto:

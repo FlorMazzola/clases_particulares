@@ -1,3 +1,3 @@
-Florencia Mazzola,39505301,2022-12-12,19-0,guitarrita            
-Juan Manuel Bertazzo,12345678,2022-12-12,20-0,flauta                                   
-fede,456,2022-12-12,15-0,fasdfdsfsd          
+Florencia Mazzola,12345678,2022-10-22,19-0,guitarra    
+Juan Manuel Bertazzo,87654321,2022-10-22,18-0,flauta    
+Augusto Lopez,45678123,2022-10-24,17-0,bajo 

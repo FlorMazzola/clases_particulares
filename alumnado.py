@@ -2,15 +2,15 @@ from alumno import Alumno
 import datetime
 
 class Alumnado:
-    '''Representa una colección de Notas que se pueden etiquetar, modificar, y
+    '''Representa una lista de alumnos que se pueden agregar,eliminar, modificar, y
     buscar'''
 
     def __init__(self, lista_de_alumnos = []):
-        '''Inicializa el anotador con una lista vacía de Notas'''
+        '''Inicializa el alumnado con una lista vacía de alumnos'''
         self.alumnos = lista_de_alumnos
 
     def nuevo_alumno (self, dni, nombre, dia_dictado, horario_dictado, instrumento):
-        '''Crea una nueva nota y la agrega a la lista'''
+        '''Crea un nuevo alumno y lo agrega a la lista'''
         fecha = dia_dictado.split('/')
         dia_dictado = datetime.date(int(fecha[0]),int(fecha[1]),int(fecha[2])) 
         hora = horario_dictado.split(':')
@@ -20,7 +20,7 @@ class Alumnado:
         return nuevo_alumno
 
     def buscar(self, nombre):
-        '''Busca todas las notas que coincidan con el filtro dado'''
+        '''Busca los alumnos que coincidan con el filtro'''
         self.alumnos_por_nombre = []
         for alumno in self.alumnos:
             if alumno.coincide(nombre):
@@ -28,14 +28,14 @@ class Alumnado:
         return self.alumnos_por_nombre
 
     def _buscar_por_dni(self, dni_alumno):
-        '''Buscar la nota con el id dado'''
+        '''Buscar el alumno con el dni correspondiente'''
         for alumno in self.alumnos:
             if str(alumno.dni) == str(dni_alumno):
                 return alumno
         return None
 
     def filtrar(self, filtro):
-        '''Busca todas las notas que coincidan con el filtro dado'''
+        '''Busca todos las instrumentos que coincidan con el filtro'''
         self.alumnos_por_instrumento = []
         for instrumento in self.alumnos:
             if instrumento.coincide(filtro.lower()):
@@ -43,7 +43,7 @@ class Alumnado:
         return self.alumnos_por_instrumento
 
     def eliminar_alumno(self, dni_alumno):
-        '''Busca la nota con el id dado y la elimina'''
+        '''Busca el alumno con el dni y lo quita de la lista'''
         alumno = self._buscar_por_dni(dni_alumno)
         if alumno:
             self.alumnos.remove(alumno)
@@ -51,11 +51,12 @@ class Alumnado:
         return False
 
     def modificar_alumno(self, dni_alumno, nombre, dia_dictado, horario_dictado, instrumento):
+        '''Busca el alumno por el dni dado al seleccionarlo y permite modicar sus datos'''
         alumno = self._buscar_por_dni(dni_alumno)
         if alumno:
             alumno.nombre = nombre
-            alumno.dia_dictado = dia_dictado
-            alumno.horario_dictado = horario_dictado
             alumno.instrumento = instrumento
+            alumno.dia_dictado = alumno.convertiraFecha(dia_dictado)
+            alumno.horario_dictado = alumno.convertiraHora(horario_dictado)
             return True
         return False

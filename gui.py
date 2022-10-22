@@ -6,7 +6,7 @@ from tkinter import ttk
 from tkinter import messagebox
 
 class Gui():
-    '''Crear la pantalla inicial, mostrando todas las notas y botones'''
+    
     def __init__(self):
         self.iniciar_alumnado()
         self.iniciar_gui()
@@ -17,6 +17,7 @@ class Gui():
         self.alumnado = Alumnado(alumnado)
 
     def iniciar_gui(self):
+        '''Crear la pantalla inicial, mostrando todos los alumnos y botones'''
         self.ventana_principal = tkinter.Tk()
         self.ventana_principal.title("Clases de Música")
         botonAgregar=tkinter.Button(self.ventana_principal,text="Agregar alumno", 
@@ -38,7 +39,7 @@ class Gui():
 
         self.treeview = ttk.Treeview(self.ventana_principal)
         self.treeview = ttk.Treeview(self.ventana_principal,
-        columns=("nombre", "dia_dictado", "horario", "instrumento"))
+        columns=("nombre", "dia_dictado", "horario_dictado", "instrumento"))
         self.treeview.heading("#0", text="Dni")
         self.treeview.column("#0", minwidth=0)
 
@@ -46,7 +47,7 @@ class Gui():
 
         self.treeview.heading("dia_dictado", text="Dia de dictado")
 
-        self.treeview.heading("horario", text="Horario")
+        self.treeview.heading("horario_dictado", text="Horario")
 
         self.treeview.heading("instrumento", text="Instrumento")
         self.treeview.grid(row=10, columnspan=4)
@@ -56,13 +57,12 @@ class Gui():
         self.cajaBuscar.focus()
 
     def poblar_tabla(self, alumnos = None):
-        #Vaciamos el Treeview, si tuviera algún item:
         for i in self.treeview.get_children():
             self.treeview.delete(i)
-        #Si no recibimos la lista de alumnado, le asignamos todas las alumnado:
+        '''Si no recibimos la lista del alumnado, le asignamos todos las alumnos:'''
         if not alumnos:
             alumnos = self.alumnado.alumnos
-        #Poblamos el treeview:
+        '''Poblamos la lista alumnos:'''
         for alumno in alumnos:
             item = self.treeview.insert("", tkinter.END, text=alumno.dni,
                               values=(alumno.nombre, alumno.dia_dictado, alumno.horario_dictado, alumno.instrumento), iid=alumno.dni)
@@ -77,10 +77,10 @@ class Gui():
         tkinter.Label(self.modalAgregar, text = "Alumno: ").grid(row=1)
         self.nombre = tkinter.Entry(self.modalAgregar)
         self.nombre.grid(row=1,column=1,columnspan=2)
-        tkinter.Label(self.modalAgregar, text = "Dia de dictado (XXXX-MM-DD): ").grid(row=2)
+        tkinter.Label(self.modalAgregar, text = "Dia de dictado (XXXX/MM/DD): ").grid(row=2)
         self.dia_dictado = tkinter.Entry(self.modalAgregar)
         self.dia_dictado.grid(row=2, column=1, columnspan=2)
-        tkinter.Label(self.modalAgregar, text = "Horario dictado (HH-MM): ").grid(row=3)
+        tkinter.Label(self.modalAgregar, text = "Horario dictado (HH:MM): ").grid(row=3)
         self.horario_dictado = tkinter.Entry(self.modalAgregar)
         self.horario_dictado.grid(row=3, column=1, columnspan=2)
         tkinter.Label(self.modalAgregar, text = "Instrumento: ").grid(row=4)
@@ -95,6 +95,7 @@ class Gui():
         botonCancelar.grid(row=5, column=2)
 
     def agregar_ok(self, event=None):
+        '''Validamos el ingreso el alumno'''
         alumno = self.alumnado.nuevo_alumno(self.dni.get(), self.nombre.get(), self.dia_dictado.get(), self.horario_dictado.get(), self.instrumento.get())
         self.modalAgregar.destroy()
         item = self.treeview.insert("", tkinter.END, text=alumno.dni,
@@ -142,6 +143,7 @@ class Gui():
         botonCancelar.grid(row=5, column=2)
 
     def modificar_ok(self, event=None):
+        '''Valida la modificacion de los datos'''
         item = self.treeview.selection()        
         dni = self.treeview.item(item)['text']
         nombre_temp = self.nombre.get()
@@ -149,26 +151,25 @@ class Gui():
         horario_temp = self.horario_dictado.get()
         instrumento_temp = self.instrumento.get()
         
-        print("Modificado el horario de cursado",) #imprime el id modificado
         self.alumnado.modificar_alumno(dni, nombre_temp, dia_temp, horario_temp, instrumento_temp)
         self.treeview.set(self.treeview.selection()[0], column="nombre",
                           value = nombre_temp)
         self.treeview.set(self.treeview.selection()[0], column="dia_dictado",
                           value = dia_temp)
-        self.treeview.set(self.treeview.selection()[0], column="horario",
+        self.treeview.set(self.treeview.selection()[0], column="horario_dictado",
                           value = horario_temp)
         self.treeview.set(self.treeview.selection()[0], column="instrumento",
                           value = instrumento_temp)
         self.modalModificar.destroy()
-   
+
     def eliminar_alumno(self):
         if not self.treeview.selection():
             messagebox.showwarning("Sin selección",
-                    "Seleccione primero el alumno a eliminar")
+                    "Seleccione primero el alumno a eliminar de la lista")
             return False
         else:
             resp = messagebox.askokcancel("Confirmar",
-                    "¿Está seguro de eliminar el alumno?")
+                    "¿Está seguro de eliminar el alumno de la lista?")
             if resp:
                 item = self.treeview.selection()
                 dni = self.treeview.item(item)['text']
@@ -178,8 +179,8 @@ class Gui():
                         self.treeview.delete(dni)
                     else:
                         messagebox.showwarning(
-                            "Error al eliminar", "Hubo un error vuelva a intentar mas tarde")
-                print(alumno.nombre + 'alumno eliminado')
+                            "Error al eliminar")
+                print(alumno.nombre + 'alumno eliminado')#probar
             else:
                 return False
 
@@ -193,13 +194,13 @@ class Gui():
                                 "Ningun alumno coincide con la búsqueda")
 
     def buscar_instrumento(self, filtro):
-        #filtro = self.buscar_filtro.get()
+        '''Aqui se filtraran los alumnos por instrumento a travez de un desplegable'''
         alumnado = self.alumnado.filtrar(filtro)
         if alumnado:
             self.poblar_tabla(alumnado)
         else:
             messagebox.showwarning("Sin resultados",
-                                "Ningun alumno coincide con la búsqueda")
+                                "Ningun instrumento coincide con la búsqueda")
     
     def salir(self):
         self.repositorio_alumnado.guardar_todo(self.alumnado.alumnos)
